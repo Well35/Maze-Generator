@@ -45,6 +45,7 @@ class _MazeState extends State<Maze> {
     await drawMaze();
   }
 
+  //
   Future<void> drawMaze() async {
     PictureRecorder recorder = PictureRecorder();
     Canvas c = Canvas(recorder);
@@ -66,6 +67,8 @@ class _MazeState extends State<Maze> {
     body = Image.memory(Uint8List.view(pngBytes!.buffer));
   }
 
+  // Fills the list of cells with a bunch of blank cells based on given size
+  //
   Future<void> generateMaze() async {
       for (int i = 0; i < widget.mazeSize; i++) {
         for (int j = 0; j < widget.mazeSize; j++) {
@@ -78,6 +81,10 @@ class _MazeState extends State<Maze> {
     current = cells.first;
   }
 
+  // The main algorithm that determines which walls get destroyed and in what order
+  //    -It uses randomized DFS to find what the next cell to be processed is
+  //    -Then it breaks the wall between the cell it came from and the next cell
+  //    -Ends after all cells are processed from the stack
   Future<void> calculateMaze() async {
     stack.Stack<Cell> s = stack.Stack();
     current!.walls[0].isVisible = false;
@@ -127,6 +134,8 @@ class _MazeState extends State<Maze> {
     return y + x * widget.mazeSize;
   }
 
+  // Removes the wall between two cells
+  //
   void removeWall(Cell a, Cell b) {
     int x = (a.r!.topLeft.dx.toInt() ~/ widget.cellSize) - (b.r!.topLeft.dx.toInt() ~/ widget.cellSize);
     int y = (a.r!.topLeft.dy.toInt() ~/ widget.cellSize) - (b.r!.topLeft.dy.toInt() ~/ widget.cellSize);
